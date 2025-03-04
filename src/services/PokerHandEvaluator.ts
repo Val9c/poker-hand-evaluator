@@ -1,17 +1,17 @@
-import { Card, Rank, Suit } from "../models/Card";
+import { Rank } from "../models/Card";
 import { Hand } from "../models/Hand";
 
 export enum HandRank {
-    HighCard = "Carte Haute",
-    OnePair = "Paire",
-    TwoPair = "Deux Paires",
-    ThreeOfAKind = "Brelan",
-    Straight = "Quinte",
-    Flush = "Couleur",
-    FullHouse = "Full",
-    FourOfAKind = "Carré",
-    StraightFlush = "Quinte Flush",
-    RoyalFlush = "Quinte Flush Royale",
+    RoyalFlush = 10,
+    StraightFlush = 9,
+    FourOfAKind = 8,
+    FullHouse = 7,
+    Flush = 6,
+    Straight = 5,
+    ThreeOfAKind = 4,
+    TwoPair = 3,
+    OnePair = 2,
+    HighCard = 1,
 }
 
 export class PokerHandEvaluator {
@@ -47,6 +47,36 @@ export class PokerHandEvaluator {
         if (countValues.includes(2)) return HandRank.OnePair;
 
         return HandRank.HighCard;
+    }
+
+    static compareHands(hand1: Hand, hand2: Hand): Hand | null {
+        const rank1 = this.evaluate(hand1);
+        const rank2 = this.evaluate(hand2);
+
+        if (rank1 > rank2) {
+            return hand1;
+        } else if (rank2 > rank1) {
+            return hand2;
+        } else {
+            return this.breakTie(hand1, hand2);
+        }
+    }
+
+    static breakTie(hand1: Hand, hand2: Hand): Hand | null {
+        const sortedHand1 = hand1.cards.sort((a, b) => this.getRankValue(b.rank) - this.getRankValue(a.rank));
+        const sortedHand2 = hand2.cards.sort((a, b) => this.getRankValue(b.rank) - this.getRankValue(a.rank));
+
+        for (let i = 0; i < sortedHand1.length; i++) {
+            const card1 = sortedHand1[i];
+            const card2 = sortedHand2[i];
+            if (this.getRankValue(card1.rank) > this.getRankValue(card2.rank)) {
+                return hand1;
+            } else if (this.getRankValue(card2.rank) > this.getRankValue(card1.rank)) {
+                return hand2;
+            }
+        }
+
+        return null;
     }
 
     private static getRankValue(rank: Rank): number {

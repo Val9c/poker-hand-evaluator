@@ -57,4 +57,81 @@ describe("PokerHandEvaluator", () => {
         ]);
         expect(PokerHandEvaluator.evaluate(hand)).toBe(HandRank.HighCard);
     });
+
+    test("Compare les mains et renvoie la meilleure main", () => {
+        const hand1 = new Hand([
+            new Card(Rank.Ace, Suit.Hearts),
+            new Card(Rank.King, Suit.Hearts),
+            new Card(Rank.Queen, Suit.Hearts),
+            new Card(Rank.Jack, Suit.Hearts),
+            new Card(Rank.Ten, Suit.Hearts),
+        ]);
+        const hand2 = new Hand([
+            new Card(Rank.King, Suit.Spades),
+            new Card(Rank.Queen, Suit.Spades),
+            new Card(Rank.Jack, Suit.Spades),
+            new Card(Rank.Ten, Suit.Spades),
+            new Card(Rank.Nine, Suit.Spades),
+        ]);
+
+        expect(PokerHandEvaluator.compareHands(hand1, hand2)).toBe(hand1);
+    });
+
+    test("Compare les mains et renvoie la meilleure main en cas d'égalité", () => {
+        const hand1 = new Hand([
+            new Card(Rank.Ace, Suit.Hearts),
+            new Card(Rank.King, Suit.Hearts),
+            new Card(Rank.Queen, Suit.Hearts),
+            new Card(Rank.Jack, Suit.Hearts),
+            new Card(Rank.Ten, Suit.Hearts),
+        ]);
+        const hand2 = new Hand([
+            new Card(Rank.Ace, Suit.Spades),
+            new Card(Rank.King, Suit.Spades),
+            new Card(Rank.Queen, Suit.Spades),
+            new Card(Rank.Jack, Suit.Spades),
+            new Card(Rank.Ten, Suit.Spades),
+        ]);
+
+        expect(PokerHandEvaluator.compareHands(hand1, hand2)).toBeNull();
+    });
+
+    test("Effectue un départage entre deux mains", () => {
+        const hand1 = new Hand([
+            new Card(Rank.Ace, Suit.Hearts),
+            new Card(Rank.King, Suit.Hearts),
+            new Card(Rank.Queen, Suit.Hearts),
+            new Card(Rank.Jack, Suit.Hearts),
+            new Card(Rank.Ten, Suit.Hearts),
+        ]);
+        const hand2 = new Hand([
+            new Card(Rank.Ace, Suit.Spades),
+            new Card(Rank.King, Suit.Spades),
+            new Card(Rank.Queen, Suit.Spades),
+            new Card(Rank.Jack, Suit.Spades),
+            new Card(Rank.Nine, Suit.Spades),
+        ]);
+
+        expect(PokerHandEvaluator.compareHands(hand1, hand2)).toBe(hand1);
+    });
+
+    test("Effectue un départage en cas d'égalité de cartes les plus élevées", () => {
+        const hand1 = new Hand([
+            new Card(Rank.Ace, Suit.Hearts),
+            new Card(Rank.King, Suit.Hearts),
+            new Card(Rank.Queen, Suit.Hearts),
+            new Card(Rank.Jack, Suit.Hearts),
+            new Card(Rank.Ten, Suit.Hearts),
+        ]);
+        const hand2 = new Hand([
+            new Card(Rank.Ace, Suit.Spades),
+            new Card(Rank.King, Suit.Spades),
+            new Card(Rank.Queen, Suit.Spades),
+            new Card(Rank.Jack, Suit.Spades),
+            new Card(Rank.Ten, Suit.Spades),
+        ]);
+
+        expect(PokerHandEvaluator.compareHands(hand1, hand2)).toBeNull();
+    });
+
 });
